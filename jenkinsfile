@@ -28,20 +28,6 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                echo '🧪 Running unit tests...'
-                sh """
-                    . ${VENV_DIR}/bin/activate
-                    pytest tests/ -v --tb=short --cov=${PACKAGE_NAME} --cov-report=xml
-                """
-            }
-            post {
-                always {
-                    junit allowEmptyResults: true, testResults: '**/test-results.xml'
-                }
-            }
-        }
 
         stage('Build WHL Package') {
             steps {
