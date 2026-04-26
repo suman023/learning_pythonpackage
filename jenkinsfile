@@ -49,7 +49,7 @@ pipeline {
 
         }
 
-        }
+      
 
 stage('Analyzing Code Quality') {
 steps {
@@ -71,3 +71,4 @@ sh '/opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=suman023_learning_py
         }
     }
 }
+  }
