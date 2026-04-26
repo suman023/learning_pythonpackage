@@ -48,11 +48,20 @@ pipeline {
         }
 
         stage('Analyzing Code Quality') {
-steps {
-// Step to analyze code quality with SonarQube
-sh '/opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=suman023_learning_pythonpackage -Dsonar.organization=suman023 -Dsonar.qualitygate.wait=false -Dsonar.qualitygate.timeout=300 -Dsonar.sources=my_package -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=5aeea4d68a3d02e89125868c25c917fb3d821bf9'
-}
-}
+stage('Analyzing Code Quality') {
+    steps {
+            sh """/opt/sonar-scanner/bin/sonar-scanner \
+                -Dsonar.projectKey=suman023_learning_pythonpackage \
+                -Dsonar.organization=suman023 \
+                -Dsonar.sources=my_package \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.login=5aeea4d68a3d02e89125868c25c917fb3d821bf9 \
+                -Dsonar.qualitygate.wait=false \
+                -Dsonar.qualitygate.timeout=300
+            """
+        }
+    }
+
 
     } // End Stages
 
