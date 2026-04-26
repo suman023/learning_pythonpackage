@@ -8,7 +8,6 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 echo '📥 Checking out source code...'
@@ -23,18 +22,18 @@ pipeline {
                     ${PYTHON} -m venv ${VENV_DIR}
                     . ${VENV_DIR}/bin/activate
                     pip install --upgrade pip
-                    pip install -r requirements.txt
+                    pip install build
+                    if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
                 """
             }
         }
-
 
         stage('Build WHL Package') {
             steps {
                 echo '📦 Building wheel package...'
                 sh """
                     . ${VENV_DIR}/bin/activate
-                    python -m build
+                    python3 -m build
                 """
             }
         }
@@ -46,17 +45,22 @@ pipeline {
                                  fingerprint: true,
                                  allowEmptyArchive: false
             }
-
         }
 
-      
-
-stage('Analyzing Code Quality') {
-steps {
-// Step to analyze code quality with SonarQube
-sh '/opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=suman023_learning_pythonpackage -Dsonar.organization=suman023 -Dsonar.qualitygate.wait=false -Dsonar.qualitygate.timeout=300 -Dsonar.sources=my_package -Dsonar.java.binaries=target/classes -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=5aeea4d68a3d02e89125868c25c917fb3d821bf9'
-}
-}
+        stage('Analyzing Code Quality') {
+            steps {
+                echo '🔍 Running SonarQube Analysis...'
+                sh """
+                    /opt/sonar-scanner/bin/sonar-scanner \
+                    -Dsonar.projectKey=suman023_learning_pythonpackage \
+                    -Dsonar.organization=suman023 \
+                    -Dsonar.sources=my_package \
+                    -Dsonar.host.url=https://sonarcloud.io \
+                    -Dsonar.login=5aeea4d68a3d02e89125868c25c917fb3d821bf9
+                """
+            }
+        }
+    } // End Stages
 
     post {
         success {
@@ -71,4 +75,4 @@ sh '/opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=suman023_learning_py
         }
     }
 }
-  }
+
