@@ -1,12 +1,11 @@
 pipeline {
     agent any
-
     environment {
         PACKAGE_NAME = "my_package"
         PYTHON       = "python3"
         VENV_DIR     = "venv"
+        SONAR_TOKEN  = "apna_token_yahan_daalo"
     }
-
     stages {
         stage('Checkout') {
             steps {
@@ -14,7 +13,6 @@ pipeline {
                 checkout scm
             }
         }
-
         stage('Setup Python Environment') {
             steps {
                 echo '🐍 Creating virtual environment...'
@@ -27,7 +25,6 @@ pipeline {
                 """
             }
         }
-
         stage('Build WHL Package') {
             steps {
                 echo '📦 Building wheel package...'
@@ -37,7 +34,6 @@ pipeline {
                 """
             }
         }
-
         stage('Archive Artifacts') {
             steps {
                 echo '🗄️ Archiving dist artifacts...'
@@ -46,25 +42,21 @@ pipeline {
                                  allowEmptyArchive: false
             }
         }
-
         stage('Analyzing Code Quality') {
-stage('Analyzing Code Quality') {
-    steps {
-            sh """/opt/sonar-scanner/bin/sonar-scanner \
-                -Dsonar.projectKey=suman023_learning_pythonpackage \
-                -Dsonar.organization=suman023 \
-                -Dsonar.sources=my_package \
-                -Dsonar.host.url=https://sonarcloud.io \
-                -Dsonar.login=5aeea4d68a3d02e89125868c25c917fb3d821bf9 \
-                -Dsonar.qualitygate.wait=false \
-                -Dsonar.qualitygate.timeout=300
-            """
+            steps {
+                echo '🔍 Analyzing code quality with SonarQube...'
+                sh """/opt/sonar-scanner/bin/sonar-scanner \
+                    -Dsonar.projectKey=suman023_learning_pythonpackage \
+                    -Dsonar.organization=suman023 \
+                    -Dsonar.sources=my_package \
+                    -Dsonar.host.url=https://sonarcloud.io \
+                    -Dsonar.login=5aeea4d68a3d02e89125868c25c917fb3d821bf9 \
+                    -Dsonar.qualitygate.wait=false \
+                    -Dsonar.qualitygate.timeout=300
+                """
+            }
         }
     }
-
-
-    } // End Stages
-
     post {
         success {
             echo '✅ Pipeline completed successfully!'
@@ -78,4 +70,3 @@ stage('Analyzing Code Quality') {
         }
     }
 }
-
