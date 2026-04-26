@@ -4,7 +4,7 @@ pipeline {
         PACKAGE_NAME = "my_package"
         PYTHON       = "python3"
         VENV_DIR     = "venv"
-        SONAR_TOKEN  = "apna_token_yahan_daalo"
+        SONAR_TOKEN  = "5aeea4d68a3d02e89125868c25c917fb3d821fb9"
     }
     stages {
         stage('Checkout') {
@@ -50,7 +50,7 @@ pipeline {
                     -Dsonar.organization=suman023 \
                     -Dsonar.sources=my_package \
                     -Dsonar.host.url=https://sonarcloud.io \
-                    -Dsonar.login=5aeea4d68a3d02e89125868c25c917fb3d821bf9 \
+                    -Dsonar.login=${SONAR_TOKEN} \
                     -Dsonar.qualitygate.wait=false \
                     -Dsonar.qualitygate.timeout=300
                 """
